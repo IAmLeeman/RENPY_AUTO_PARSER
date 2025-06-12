@@ -46,7 +46,24 @@ for line in lines:
         }
 
         escaped = json.dumps(data).replace('"', '\\"')
-        print(f"\"{escaped}\"")
+        dialogues.append(f"\"{escaped}\"")
+        
+    elif re.match(r'(\w+)\s+"(.+?)"', line):
+        match = re.match(r'(\w+)\s+"(.+?)"', line)
+        char_code = match.group(1)
+        text = match.group(2)
+
+        character = char_map.get(char_code, "Unknown")
+        sprite = ""  # No sprite change
+
+        data = {
+            "text": text,
+            "character": character,
+            "sprite": sprite
+        }
+
+        escaped = json.dumps(data).replace('"', '\\"')
+        dialogues.append(f"\"{escaped}\"")
 
     else:
         match = re.search(r'"(.+?)"', line)
@@ -54,7 +71,7 @@ for line in lines:
             text = match.group(1)
             data = {
                 "text": text,
-                 "character": "Narrator",
+                "character": " ",
                 "sprite": ""
             }
             json_str = json.dumps(data).replace('"', '\\"')
