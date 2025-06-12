@@ -1,12 +1,20 @@
 ### SUPAHAXOR ###
 ### RenPy to cJSON parser ###
-### 11/06/2025 ###
+### 12/06/2025 ###
 
 import re
 import json
 
+char_map = {
+    "s": "Sayori",
+    "m": "Monika",
+    "y": "Yuri",
+    "n": "Natsuki",
+    "mc": "MC"
+}
+
 dialogues = []
-print("Hello World")
+
 
 with open('script-ch0.rpy', "r", encoding='utf-8') as file:
     
@@ -20,12 +28,40 @@ for line in lines:
     if not line or line.startswith('#'):
         continue
 
-    match = re.match(r'(?:(\w+)(?: \w+)? )?"(.+?)"', line)
+    match = re.match(r'(\w+)\s+(\w+)\s+"(.+?)"', line)  ### REGEX -- Great...
     if match:
-        speaker = match.group(1) if match.group(1) else "Narrator"
-        text = match.group(2)
-        dialogues.append((speaker, text))
 
-for speaker, text in dialogues[:10]:
-    print(f"{speaker}: {text}")
+        char_code = match.group(1)
+        sprite_code = match.group(2)
+        text = match.group(3)
 
+        
+        character = char_map.get(char_code, "Unknown")
+        sprite = character.lower() + sprite_code
+
+        data = {
+        "text": text,
+        "character": character,
+        "sprite": sprite 
+        }
+
+        escaped = json.dumps(data).replace('"', '\\"')
+        print(f"\"{escaped}\"")
+
+    else:
+        match = re.match(r'"(.+?)"', line)
+        if match:
+            text = match.group(1)
+            data = {
+                "text": text,
+                 "character": "Narrator",
+                "sprite": ""
+            }
+            json_str = json.dumps(data).replace('"', '\\"')
+            dialogues.append(f"\"{json_str}\"")
+
+with open("output.txt", "w", encoding="utf-8") as out_file:
+    for line in dialogues:
+        out_file.write(line + "\n")
+
+print("Done. Wrote output.txt with all dialogue lines.")
