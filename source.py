@@ -49,7 +49,7 @@ for line in lines:
         print(f"\"{escaped}\"")
 
     else:
-        match = re.match(r'"(.+?)"', line)
+        match = re.search(r'"(.+?)"', line)
         if match:
             text = match.group(1)
             data = {
