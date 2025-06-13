@@ -46,7 +46,7 @@ for line in lines:
         }
 
         escaped = json.dumps(data).replace('"', '\\"')
-        dialogues.append(f"\"{escaped}\"")
+        dialogues.append(f"\"{escaped}\",")
         
     elif re.match(r'(\w+)\s+"(.+?)"', line):
         match = re.match(r'(\w+)\s+"(.+?)"', line)
@@ -63,7 +63,7 @@ for line in lines:
         }
 
         escaped = json.dumps(data).replace('"', '\\"')
-        dialogues.append(f"\"{escaped}\"")
+        dialogues.append(f"\"{escaped}\",")
 
     else:
         match = re.search(r'"(.+?)"', line)
@@ -75,7 +75,7 @@ for line in lines:
                 "sprite": ""
             }
             json_str = json.dumps(data).replace('"', '\\"')
-            dialogues.append(f"\"{json_str}\"")
+            dialogues.append(f"\"{json_str}\",")
 
 with open("output.txt", "w", encoding="utf-8") as out_file:
     for line in dialogues:
